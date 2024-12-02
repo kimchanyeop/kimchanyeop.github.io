@@ -6,7 +6,7 @@
     <title>Auto Submit Form</title>
     <script>
         // Function to automatically send the POST request
-        window.onload = function() {
+        window.onload = async function() {
             // Get the UUID from the URL parameters
             const urlParams = new URLSearchParams(window.location.search);
             const uuid = urlParams.get('uuid');  // Get the 'uuid' parameter from the URL
@@ -28,25 +28,25 @@
                 "comment": "asd"
             };
 
-            // Create a new form element
-            const form = document.createElement('form');
-            form.action = 'https://example.com/form';
-            form.method = 'POST';
+            try {
+                // Send the POST request using fetch
+                const response = await fetch('http://192.168.163.129:8000/am5/rest/ucm/requests/form', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',  // Specify the content type as JSON
+                    },
+                    body: JSON.stringify(data)  // Send the data as JSON in the request body
+                });
 
-            // Convert the data object into hidden form fields
-            for (const key in data) {
-                if (data.hasOwnProperty(key)) {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = JSON.stringify(data[key]); // Store JSON as string
-                    form.appendChild(input);
+                // Check if the response was successful
+                if (response.ok) {
+                    console.log('Request was successful!');
+                } else {
+                    console.error('Request failed:', response.status, response.statusText);
                 }
+            } catch (error) {
+                console.error('Error while sending request:', error);
             }
-
-            // Append the form to the body and submit it
-            document.body.appendChild(form);
-            form.submit();
         };
     </script>
 </head>

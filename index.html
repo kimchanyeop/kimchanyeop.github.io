@@ -1,7 +1,56 @@
-<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-<df-messenger
-  intent="WELCOME"
-  chat-title="Hotel_Chatbot"
-  agent-id="ca12198b-6a00-4b7f-a3e8-08f401338332"
-  language-code="en"
-></df-messenger>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Submit Form</title>
+    <script>
+        // Function to automatically send the POST request
+        window.onload = function() {
+            // Get the UUID from the URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const uuid = urlParams.get('uuid');  // Get the 'uuid' parameter from the URL
+
+            if (!uuid) {
+                alert('UUID parameter is missing in the URL!');
+                return;
+            }
+
+            // Data to be sent, with the UUID from the URL
+            const data = {
+                "subforms": [
+                    {
+                        "uuid": uuid,  // Use the UUID from the URL
+                        "duration": 8
+                    }
+                ],
+                "action": "APPROVE",
+                "comment": "asd"
+            };
+
+            // Create a new form element
+            const form = document.createElement('form');
+            form.action = 'https://example.com/form';
+            form.method = 'POST';
+
+            // Convert the data object into hidden form fields
+            for (const key in data) {
+                if (data.hasOwnProperty(key)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = JSON.stringify(data[key]); // Store JSON as string
+                    form.appendChild(input);
+                }
+            }
+
+            // Append the form to the body and submit it
+            document.body.appendChild(form);
+            form.submit();
+        };
+    </script>
+</head>
+<body>
+    <h1>Sending data...</h1>
+</body>
+</html>

